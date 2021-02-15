@@ -1,0 +1,8 @@
+lib/
+.idea/
+src
+tsconfig.json
+.eslintrc.js
+.eslintignore
+.prettierrc.json
+create_git_properties.sh
