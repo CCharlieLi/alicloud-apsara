@@ -1,7 +1,6 @@
 {
 	"name": "alicloud-apsara",
 	"version": "0.0.1",
-	"private": true,
 	"description": "A library for AliCloud live-streaming platform - Apsara",
 	"keywords": [
 		"AliCloud",

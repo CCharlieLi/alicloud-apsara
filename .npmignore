@@ -1,8 +1,13 @@
+.vscode
+coverage
 lib/
 .idea/
 src
-tsconfig.json
+tsconfig.*
 .eslintrc.js
+.coveralls.yml
 .eslintignore
-.prettierrc.json
+.prettierrc
+.commitlintrc.json
 create_git_properties.sh
+.yarnclean
