@@ -1,5 +1,8 @@
 # alicloud-apsara
 
+[![Build Status](https://travis-ci.com/CCharlieLi/alicloud-apsara.svg?branch=master)](https://travis-ci.com/CCharlieLi/alicloud-apsara)
+[![Coverage Status](https://coveralls.io/repos/github/CCharlieLi/alicloud-apsara/badge.svg?branch=master)](https://coveralls.io/github/CCharlieLi/alicloud-apsara?branch=master)
+
 This is a library for integrating with AliCloud live-streaming platform - [Apsara](https://www.alibabacloud.com/help/doc-detail/29951.htm?spm=a2c63.p38356.b99.2.2c0d56a2C7EHql).
 
 Integration progress:
