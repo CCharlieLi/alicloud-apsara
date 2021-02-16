@@ -11,6 +11,9 @@
 		"Apsara",
 		"Video"
 	],
+	"engines": {
+    "node": ">=10"
+  },
 	"author": "Charlie Li <ccharlieli@live.com>",
 	"license": "MIT",
 	"repository": {

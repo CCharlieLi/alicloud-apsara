@@ -58,7 +58,6 @@ describe('Unit test', () => {
           HostId: 'live.aliyuncs.com',
           Code: 'InvalidAccessKeyId.NotFound'
         })
-
       try {
         await apsara.getDomains()
       } catch (err) {
