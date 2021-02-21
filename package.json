@@ -1,105 +1,103 @@
 {
-	"name": "alicloud-apsara",
-	"version": "0.0.1",
-	"description": "A library for AliCloud live-streaming platform - Apsara",
-	"keywords": [
-		"AliCloud",
-		"Aliyun",
-		"Live",
-		"Streaming",
-		"Apsara",
-		"Video"
-	],
-	"engines": {
+  "name": "alicloud-apsara",
+  "version": "0.0.1",
+  "description": "A library for AliCloud live-streaming platform - Apsara",
+  "keywords": [
+    "AliCloud",
+    "Aliyun",
+    "Live",
+    "Streaming",
+    "Apsara",
+    "Video"
+  ],
+  "engines": {
     "node": ">=10"
   },
-	"author": "Charlie Li <ccharlieli@live.com>",
-	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/CCharlieLi/service-template.git"
-	},
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
-	"scripts": {
-		"compile": "tsc -b",
-		"compile:watch": "tsc -w -p .",
-		"clean": "rimraf dist coverage tsconfig.tsbuildinfo yarn.lock package-lock.json .nyc_output",
-		"lint": "eslint . --ext .ts",
-		"lint:fix": "eslint . --ext .ts --fix",
-		"prettier": "prettier --write '{src,test,resources}/**/*.{ts,json,md}'",
-		"test": "yarn lint:fix && jest --passWithNoTests --collect-coverage",
-		"prepublishOnly": "yarn test && yarn lint",
-		"preversion": "yarn lint"
-	},
-	"husky": {
-		"hooks": {
-			"post-commit": "git update-index --again",
-			"pre-commit": "lint-staged",
-			"pre-push": "yarn compile && yarn test",
-			"commit-msg": "commitlint -c .commitlintrc.json -E HUSKY_GIT_PARAMS"
-		}
-	},
-	"lint-staged": {
-		"./src/**/*.ts": [
-			"yarn prettier",
-			"yarn lint"
-		]
-	},
-	"jest": {
-		"modulePathIgnorePatterns": [
-			"./dist"
-		]
-	},
-	"dependencies": {
-		"axios": "^0.21.1",
-		"crypto": "^1.0.1",
-		"http-errors": "^1.8.0",
-		"uuid": "^8.3.2"
-	},
-	"devDependencies": {
-		"@commitlint/cli": "^11.0.0",
-		"@commitlint/config-angular": "^11.0.0",
-		"@types/accept-language-parser": "1.5.1",
-		"@types/bluebird": "3.5.33",
-		"@types/body-parser": "1.19.0",
-		"@types/compression": "1.0.1",
-		"@types/cors": "2.8.6",
-		"@types/express": "4.17.3",
-		"@types/fs-extra": "8.0.1",
-		"@types/helmet": "0.0.45",
-		"@types/http-errors": "^1.8.0",
-		"@types/intl": "1.2.0",
-		"@types/ioredis": "4.16.4",
-		"@types/jest": "~25.1.4",
-		"@types/jsonwebtoken": "8.3.8",
-		"@types/morgan": "1.9.0",
-		"@types/node": "~10.14.22",
-		"@types/node-fetch": "~2.5.5",
-		"@types/request": "2.48.5",
-		"@types/supertest": "~2.0.8",
-		"@types/utf8": "2.1.6",
-		"@types/uuid": "3.4.6",
-		"@types/vitalsigns": "0.4.3",
-		"@types/xml2js": "0.4.5",
-		"@typescript-eslint/eslint-plugin": "~2.23.0",
-		"@typescript-eslint/parser": "~2.23.0",
-		"coveralls": "^3.1.0",
-		"dotenv": "~8.2.0",
-		"eslint": "~6.8.0",
-		"eslint-config-prettier": "~6.10.0",
-		"eslint-plugin-prettier": "~3.1.2",
-		"eslint-plugin-simple-import-sort": "^7.0.0",
-		"husky": "~4.2.3",
-		"jest": "~25.1.0",
-		"lint-staged": "10.0.8",
-		"nock": "^13.0.7",
-		"nockback-harder": "~4.0.1",
-		"prettier": "^2.2.1",
-		"supertest": "~4.0.2",
-		"ts-jest": "~25.2.1",
-		"ts-mockery": "^1.2.0",
-		"ts-node": "8.5.0",
-		"typescript": "3.8.3"
-	}
+  "author": "Charlie Li <ccharlieli@live.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CCharlieLi/service-template.git"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "compile": "tsc -b",
+    "compile:watch": "tsc -w -p .",
+    "clean": "rimraf dist coverage tsconfig.tsbuildinfo yarn.lock package-lock.json .nyc_output",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "prettier": "prettier --write '{src,test,resources}/**/*.{ts,json,md}'",
+    "test": "yarn lint:fix && jest --passWithNoTests --collect-coverage",
+    "prepublishOnly": "yarn test && yarn lint",
+    "preversion": "yarn lint"
+  },
+  "husky": {
+    "hooks": {
+      "post-commit": "git update-index --again",
+      "pre-commit": "lint-staged",
+      "pre-push": "yarn compile && yarn test",
+      "commit-msg": "commitlint -c .commitlintrc.json -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,js,jsx}": [
+      "yarn prettier",
+      "yarn lint"
+    ],
+    "*.{json,md}": [
+      "yarn prettier"
+    ]
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "crypto": "^1.0.1",
+    "http-errors": "^1.8.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-angular": "^11.0.0",
+    "@types/accept-language-parser": "1.5.1",
+    "@types/bluebird": "3.5.33",
+    "@types/body-parser": "1.19.0",
+    "@types/compression": "1.0.1",
+    "@types/cors": "2.8.6",
+    "@types/express": "4.17.3",
+    "@types/fs-extra": "8.0.1",
+    "@types/helmet": "0.0.45",
+    "@types/http-errors": "^1.8.0",
+    "@types/intl": "1.2.0",
+    "@types/ioredis": "4.16.4",
+    "@types/jest": "~25.1.4",
+    "@types/jsonwebtoken": "8.3.8",
+    "@types/morgan": "1.9.0",
+    "@types/node": "~10.14.22",
+    "@types/node-fetch": "~2.5.5",
+    "@types/request": "2.48.5",
+    "@types/supertest": "~2.0.8",
+    "@types/utf8": "2.1.6",
+    "@types/uuid": "3.4.6",
+    "@types/vitalsigns": "0.4.3",
+    "@types/xml2js": "0.4.5",
+    "@typescript-eslint/eslint-plugin": "~2.23.0",
+    "@typescript-eslint/parser": "~2.23.0",
+    "coveralls": "^3.1.0",
+    "dotenv": "~8.2.0",
+    "eslint": "~6.8.0",
+    "eslint-config-prettier": "~6.10.0",
+    "eslint-plugin-prettier": "~3.1.2",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "husky": "~4.2.3",
+    "jest": "~25.1.0",
+    "lint-staged": "10.0.8",
+    "nock": "^13.0.7",
+    "nockback-harder": "~4.0.1",
+    "prettier": "^2.2.1",
+    "supertest": "~4.0.2",
+    "ts-jest": "~25.2.1",
+    "ts-mockery": "^1.2.0",
+    "ts-node": "8.5.0",
+    "typescript": "3.8.3"
+  }
 }
