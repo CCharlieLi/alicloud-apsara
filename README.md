@@ -6,10 +6,13 @@
 This is a library for integrating with AliCloud live-streaming platform - [Apsara](https://www.alibabacloud.com/help/doc-detail/29951.htm?spm=a2c63.p38356.b99.2.2c0d56a2C7EHql).
 
 Integration progress:
+
 - [x] [get domains](https://www.alibabacloud.com/help/doc-detail/88332.htm?spm=a2c63.p38356.b99.143.17872c80zDTOBs)
+- [x] generate ingest/streaming url with signature
 - [ ] TBD
 
 ### How to use
+
 ```js
 import { Apsara, ApsaraDomainsData } from 'alicloud-apsara'
 
@@ -42,6 +45,7 @@ const domainsData: ApsaraDomainsData = await apsara.getDomains()
 ### Specs
 
 #### Apsara(options [,logger])
+
 - **options**, required
   - `accessKeyId`: string, required
   - `accessKeySecret`: string, required

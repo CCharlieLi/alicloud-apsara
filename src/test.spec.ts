@@ -1,4 +1,5 @@
 import nock from 'nock'
+import { URL } from 'url'
 
 import { Apsara } from './Apsara'
 import { BASE_URL } from './constants'
@@ -81,6 +82,38 @@ describe('Unit test', () => {
         expect(err.name).toBe('InternalServerError')
         expect(err.message).toBe('randome error')
       }
+    })
+  })
+
+  describe('Get Url', () => {
+    it('should get ingest url successfully', async () => {
+      const url: URL = await apsara.getIngestUrl({
+        domain: 'eko.com',
+        appName: 'testApp',
+        streamName: 'testStream',
+        expiredIn: 3600,
+        key: 'testKey'
+      })
+
+      expect(url.protocol).toBe('rtmp:')
+      expect(url.host).toBe('eko.com')
+      expect(url.pathname).toBe('/testApp/testStream')
+    })
+
+    it('should get streaming url successfully', async () => {
+      const url: URL = await apsara.getVideoStreamingUrl({
+        domain: 'eko.com',
+        appName: 'testApp',
+        streamName: 'testStream',
+        expiredIn: 3600,
+        key: 'testKey',
+        format: 'm3u8',
+        isSecure: true
+      })
+
+      expect(url.protocol).toBe('https:')
+      expect(url.host).toBe('eko.com')
+      expect(url.pathname).toBe('/testApp/testStream.m3u8')
     })
   })
 })

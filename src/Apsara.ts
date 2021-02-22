@@ -1,15 +1,23 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
-import { createHmac } from 'crypto'
+import crypto, { createHmac } from 'crypto'
+import { addSeconds } from 'date-fns'
 import createHttpError from 'http-errors'
 import { escape } from 'querystring'
+import { URL } from 'url'
 import { v4 as uuidv4 } from 'uuid'
 
 import { API_VERSION, BASE_URL, FORMAT, SIGNATURE_METHOD, SIGNATURE_VERSION, TIMEOUT } from './constants'
-import { ApsaraDomainsData } from './data/ApsaraDomainsData'
-import { ApsaraErrorData } from './data/ApsaraErrorData'
-import { AsparaOptions } from './data/ApsaraOptions'
-import { ApsaraParams } from './data/ApsaraParams'
-import { Logger } from './data/Logger'
+import {
+  ApsaraDomainsData,
+  ApsaraErrorData,
+  ApsaraIngestUrlParams,
+  ApsaraParams,
+  ApsaraProtocal,
+  ApsaraStreamingUrlParams,
+  ApsaraUrlParams,
+  AsparaOptions,
+  Logger
+} from './data'
 
 export class Apsara {
   private options: AsparaOptions
@@ -37,16 +45,70 @@ export class Apsara {
    */
   async getDomains(): Promise<ApsaraDomainsData> {
     this.logger?.info(`Get domains of current Apsara account`)
-    return this.request<ApsaraDomainsData>({ Action: 'DescribeLiveUserDomains' })
+    return this._request<ApsaraDomainsData>({ Action: 'DescribeLiveUserDomains' })
+  }
+
+  /**
+   * Create ingest URL with signature
+   */
+  getIngestUrl({ domain, appName, streamName, expiredIn, key }: ApsaraIngestUrlParams): Promise<URL> {
+    const protocol = 'rtmp:'
+    const extension = this._getFileExtension('rtmp' as ApsaraProtocal)
+    return this._generateUrl({ protocol, domain, appName, streamName, extension, expiredIn, key })
+  }
+
+  /**
+   * Create streaming URL with signature
+   */
+  getVideoStreamingUrl({
+    domain,
+    appName,
+    streamName,
+    expiredIn,
+    key,
+    format,
+    isSecure
+  }: ApsaraStreamingUrlParams): Promise<URL> {
+    const protocol = this._getProtocol(format, isSecure)
+    const extension = this._getFileExtension(format)
+    return this._generateUrl({ protocol, domain, appName, streamName, extension, expiredIn, key })
   }
 
   // Private
 
   /**
+   * Generate Apsara ingest/streaming URL with signature
+   * See https://help.aliyun.com/document_detail/199349.html?spm=a2c4g.11186623.2.4.36005f12Jui3YZ
+   * @param protocol
+   * @param domain
+   * @param appName
+   * @param streamName
+   * @param extension
+   * @param expiredIn seconds
+   * @param key
+   */
+  private async _generateUrl({
+    protocol,
+    domain,
+    appName,
+    streamName,
+    extension,
+    expiredIn,
+    key
+  }: ApsaraUrlParams): Promise<URL> {
+    const unixTimestamp = Math.trunc(addSeconds(new Date(), expiredIn).getTime() / 1000)
+    const signature = `${appName}/${streamName}/${extension}-${unixTimestamp}-0-0-${key}`
+    const hashedSignature = crypto.createHash('md5').update(signature).digest('hex')
+    return new URL(
+      `${protocol}//${domain}/${appName}/${streamName}${extension}?auth_key=${unixTimestamp}-0-0-${hashedSignature}`
+    )
+  }
+
+  /**
    * Make HTTP request to Apsara open API
    * @param {object} params
    */
-  private async request<T>(params: Record<string, string>): Promise<T> {
+  private async _request<T>(params: Record<string, string>): Promise<T> {
     this.logger?.info(`Send request to Apsara with payload ${JSON.stringify(params)}`)
 
     // create payload
@@ -60,7 +122,7 @@ export class Apsara {
       SignatureNonce: uuidv4(),
       Timestamp: new Date().toISOString()
     }
-    const signature: string = this.generateSignature({ ...commonParams, ...params }, method)
+    const signature: string = this._generateSignature({ ...commonParams, ...params }, method)
 
     // init request
     let response: AxiosResponse<T>
@@ -98,7 +160,7 @@ export class Apsara {
    * @param {object} payload
    * @param {string} method
    */
-  private generateSignature(payload: any, method: string): string {
+  private _generateSignature(payload: any, method: string): string {
     // sort params
     const paramsStr = Object.keys(payload)
       .map(key => (key === 'Timestamp' ? `${key}=${encodeURIComponent(payload[key])}` : `${key}=${payload[key]}`))
@@ -114,5 +176,40 @@ export class Apsara {
           .replace('%7E', '~')}`
       )
       .digest('base64')
+  }
+
+  /**
+   * Get URL protocal based on given format
+   * @param format
+   * @param isSecure
+   */
+  private _getProtocol(format: ApsaraProtocal, isSecure = false): string {
+    switch (format) {
+      case 'rtmp':
+        return 'rtmp:'
+      case 'udp':
+        return 'udp:'
+      case 'flv':
+      case 'm3u8':
+      default:
+        return isSecure ? 'https:' : 'http:'
+    }
+  }
+
+  /**
+   *  Get URL file extension based on given format
+   * @param format
+   */
+  private _getFileExtension(format: ApsaraProtocal): string {
+    switch (format) {
+      case 'flv':
+        return `.flv`
+      case 'm3u8':
+        return `.m3u8`
+      case 'rtmp':
+      case 'udp':
+      default:
+        return ''
+    }
   }
 }
