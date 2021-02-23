@@ -9,6 +9,7 @@ Integration progress:
 
 - [x] [get domains](https://www.alibabacloud.com/help/doc-detail/88332.htm?spm=a2c63.p38356.b99.143.17872c80zDTOBs)
 - [x] generate ingest/streaming url with signature
+- [x] forbid ingest url
 - [ ] TBD
 
 ### How to use

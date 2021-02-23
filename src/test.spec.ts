@@ -3,6 +3,7 @@ import { URL } from 'url'
 
 import { Apsara } from './Apsara'
 import { BASE_URL } from './constants'
+import { ApsaraResponseData } from './data'
 import { ApsaraDomainsData } from './data/ApsaraDomainsData'
 
 describe('Unit test', () => {
@@ -146,6 +147,23 @@ describe('Unit test', () => {
       expect(url.protocol).toBe('rtmp:')
       expect(url.host).toBe('eko.com')
       expect(url.pathname).toBe('/testApp/testStream')
+    })
+  })
+
+  describe('Terminate ingest Url', () => {
+    it('should fetch domains successfully', async () => {
+      nock(BASE_URL)
+        .get(() => true)
+        .reply(200, {
+          RequestId: '0500D05A-505D-49B1-B989-BDC9FDAB9BAD'
+        })
+
+      const res: ApsaraResponseData = await apsara.terminateStreamingUrl({
+        domain: 'test',
+        appName: 'test',
+        streamName: 'test'
+      })
+      expect(res.RequestId).toBe('0500D05A-505D-49B1-B989-BDC9FDAB9BAD')
     })
   })
 })

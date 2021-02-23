@@ -13,6 +13,7 @@ import {
   ApsaraIngestUrlParams,
   ApsaraParams,
   ApsaraProtocal,
+  ApsaraResponseData,
   ApsaraStreamingUrlParams,
   ApsaraUrlParams,
   AsparaOptions,
@@ -81,6 +82,28 @@ export class Apsara {
     return this._generateUrl({ protocol, domain, appName, streamName, extension, expiredIn, key })
   }
 
+  /**
+   * Terminate ingest URL
+   * See https://www.alibabacloud.com/help/zh/doc-detail/35413.htm?spm=a2c63.p38356.b99.175.36cd25c5tO1uNW
+   */
+  async terminateStreamingUrl({
+    domain,
+    appName,
+    streamName
+  }: {
+    domain: string
+    appName: string
+    streamName: string
+  }): Promise<ApsaraResponseData> {
+    return this._request<ApsaraResponseData>({
+      AppName: appName,
+      StreamName: streamName,
+      Action: 'ForbidLiveStream',
+      LiveStreamType: 'publisher',
+      DomainName: domain
+    })
+  }
+
   // Private
 
   /**
@@ -104,7 +127,7 @@ export class Apsara {
     key
   }: ApsaraUrlParams): Promise<URL> {
     const unixTimestamp = Math.trunc(addSeconds(new Date(), expiredIn).getTime() / 1000)
-    const signature = `${appName}/${streamName}/${extension}-${unixTimestamp}-0-0-${key}`
+    const signature = `/${appName}/${streamName}${extension}-${unixTimestamp}-0-0-${key}`
     const hashedSignature = crypto.createHash('md5').update(signature).digest('hex')
     return new URL(
       `${protocol}//${domain}/${appName}/${streamName}${extension}?auth_key=${unixTimestamp}-0-0-${hashedSignature}`
