@@ -13,6 +13,7 @@ import {
   ApsaraIngestUrlParams,
   ApsaraParams,
   ApsaraProtocal,
+  ApsaraProtocals,
   ApsaraResponseData,
   ApsaraStreamingUrlParams,
   ApsaraUrlParams,
@@ -56,7 +57,7 @@ export class Apsara {
     this.logger?.info(
       `Create ingest url with domain:${domain}, appName: ${appName}, streamName: ${streamName}, expiredIn: ${expiredIn}`
     )
-    const protocol = 'rtmp:'
+    const protocol = `${ApsaraProtocals.rtmp}:`
     const extension = this._getFileExtension('rtmp' as ApsaraProtocal)
     return this._generateUrl({ protocol, domain, appName, streamName, extension, expiredIn, key })
   }
@@ -215,12 +216,12 @@ export class Apsara {
    */
   private _getProtocol(format: ApsaraProtocal, isSecure = false): string {
     switch (format) {
-      case 'rtmp':
-        return 'rtmp:'
-      case 'udp':
-        return 'udp:'
-      case 'flv':
-      case 'm3u8':
+      case ApsaraProtocals.rtmp:
+        return `${ApsaraProtocals.rtmp}:`
+      case ApsaraProtocals.udp:
+        return `${ApsaraProtocals.udp}:`
+      case ApsaraProtocals.flv:
+      case ApsaraProtocals.m3u8:
       default:
         return isSecure ? 'https:' : 'http:'
     }
@@ -232,12 +233,12 @@ export class Apsara {
    */
   private _getFileExtension(format: ApsaraProtocal): string {
     switch (format) {
-      case 'flv':
-        return `.flv`
-      case 'm3u8':
-        return `.m3u8`
-      case 'rtmp':
-      case 'udp':
+      case ApsaraProtocals.flv:
+        return `.${ApsaraProtocals.flv}`
+      case ApsaraProtocals.m3u8:
+        return `.${ApsaraProtocals.m3u8}`
+      case ApsaraProtocals.rtmp:
+      case ApsaraProtocals.udp:
       default:
         return ''
     }
