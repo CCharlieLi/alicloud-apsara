@@ -52,6 +52,9 @@ export class Apsara {
    * Create ingest URL with signature
    */
   getIngestUrl({ domain, appName, streamName, expiredIn, key }: ApsaraIngestUrlParams): Promise<URL> {
+    this.logger?.info(
+      `Create ingest url with domain:${domain}, appName: ${appName}, streamName: ${streamName}, expiredIn: ${expiredIn}`
+    )
     const protocol = 'rtmp:'
     const extension = this._getFileExtension('rtmp' as ApsaraProtocal)
     return this._generateUrl({ protocol, domain, appName, streamName, extension, expiredIn, key })
@@ -69,6 +72,10 @@ export class Apsara {
     format,
     isSecure
   }: ApsaraStreamingUrlParams): Promise<URL> {
+    this.logger?.info(
+      `Create streaming url with domain:${domain}, appName: ${appName}, ` +
+        `streamName: ${streamName}, expiredIn: ${expiredIn}, format: ${format}, isSecure: ${isSecure}`
+    )
     const protocol = this._getProtocol(format, isSecure)
     const extension = this._getFileExtension(format)
     return this._generateUrl({ protocol, domain, appName, streamName, extension, expiredIn, key })

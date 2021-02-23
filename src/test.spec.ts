@@ -100,7 +100,7 @@ describe('Unit test', () => {
       expect(url.pathname).toBe('/testApp/testStream')
     })
 
-    it('should get streaming url successfully', async () => {
+    it('should get streaming url successfully - m3u8', async () => {
       const url: URL = await apsara.getVideoStreamingUrl({
         domain: 'eko.com',
         appName: 'testApp',
@@ -114,6 +114,38 @@ describe('Unit test', () => {
       expect(url.protocol).toBe('https:')
       expect(url.host).toBe('eko.com')
       expect(url.pathname).toBe('/testApp/testStream.m3u8')
+    })
+
+    it('should get streaming url successfully - flv', async () => {
+      const url: URL = await apsara.getVideoStreamingUrl({
+        domain: 'eko.com',
+        appName: 'testApp',
+        streamName: 'testStream',
+        expiredIn: 3600,
+        key: 'testKey',
+        format: 'flv',
+        isSecure: true
+      })
+
+      expect(url.protocol).toBe('https:')
+      expect(url.host).toBe('eko.com')
+      expect(url.pathname).toBe('/testApp/testStream.flv')
+    })
+
+    it('should get streaming url successfully - rtmp', async () => {
+      const url: URL = await apsara.getVideoStreamingUrl({
+        domain: 'eko.com',
+        appName: 'testApp',
+        streamName: 'testStream',
+        expiredIn: 3600,
+        key: 'testKey',
+        format: 'rtmp',
+        isSecure: true
+      })
+
+      expect(url.protocol).toBe('rtmp:')
+      expect(url.host).toBe('eko.com')
+      expect(url.pathname).toBe('/testApp/testStream')
     })
   })
 })
