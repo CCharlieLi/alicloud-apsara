@@ -22,6 +22,7 @@ const apsara = new Apsara({
   accessKeySecret: 'keySecret'
 })
 
+// fetch domains from apsara
 const domainsData: ApsaraDomainsData = await apsara.getDomains()
 // Domains: {
 //   PageData: [
@@ -41,6 +42,16 @@ const domainsData: ApsaraDomainsData = await apsara.getDomains()
 // RequestId: '0500D05A-505D-49B1-B989-BDC9FDAB9BAD',
 // PageSize: 20,
 // PageNumber: 1
+
+// forbid a streaming
+const res: ApsaraResponseData = await apsara.terminateStreamingUrl({
+  domain: 'test',
+  appName: 'test',
+  streamName: 'test',
+  oneshot: 'yes', // 'yes'/'no', yes - only forbid without adding to blacklist
+  resumeTime: '2021-02-24T17:59:19Z'
+})
+// RequestId: '0500D05A-505D-49B1-B989-BDC9FDAB9BAD',
 ```
 
 ### Specs
@@ -58,7 +69,32 @@ const domainsData: ApsaraDomainsData = await apsara.getDomains()
   - `format`?: string, by default `'json'`
 - **logger**, optional, WinstonLogger/BunyanLogger/Console
 
-#### [Apsara.getDomains()](https://www.alibabacloud.com/help/doc-detail/88332.htm?spm=a2c63.p38356.b99.143.17872c80zDTOBs)
+#### Methods (TBD)
+
+- Apsara.getDomains()
+- Apsara.getIngestUrl({
+  domain: string
+  appName: string
+  streamName: string
+  expiredIn: number
+  key: string
+  })
+- Apsara.getVideoStreamingUrl({
+  domain: string
+  appName: string
+  streamName: string
+  expiredIn: number // seconds
+  key: string
+  format: string // 'rtmp' | 'flv' | 'm3u8' | 'udp'
+  isSecure: boolean
+  })
+- Apsara.terminateStreamingUrl({
+  domain: string
+  appName: string
+  streamName: string
+  oneshot?: string
+  resumeTime?: string // "yyyy-MM-dd'T'HH:mm:ss'Z'"
+  })
 
 ### How to test
 
