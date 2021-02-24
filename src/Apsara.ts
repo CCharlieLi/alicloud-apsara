@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import crypto, { createHmac } from 'crypto'
-import { addSeconds } from 'date-fns'
+import { addHours, addSeconds, format } from 'date-fns'
 import createHttpError from 'http-errors'
 import { escape } from 'querystring'
 import { URL } from 'url'
@@ -90,18 +90,24 @@ export class Apsara {
   async terminateStreamingUrl({
     domain,
     appName,
-    streamName
+    streamName,
+    oneshot,
+    resumeTime
   }: {
     domain: string
     appName: string
     streamName: string
+    oneshot?: string
+    resumeTime?: string
   }): Promise<ApsaraResponseData> {
     return this._request<ApsaraResponseData>({
       AppName: appName,
       StreamName: streamName,
       Action: 'ForbidLiveStream',
       LiveStreamType: 'publisher',
-      DomainName: domain
+      DomainName: domain,
+      Oneshot: oneshot ?? 'yes',
+      ResumeTime: resumeTime ?? format(addHours(new Date(), 6), "yyyy-MM-dd'T'HH:mm:ss'Z'")
     })
   }
 
@@ -194,19 +200,21 @@ export class Apsara {
   private _generateSignature(payload: any, method: string): string {
     // sort params
     const paramsStr = Object.keys(payload)
-      .map(key => (key === 'Timestamp' ? `${key}=${encodeURIComponent(payload[key])}` : `${key}=${payload[key]}`))
+      .map(key =>
+        key === 'Timestamp' || key === 'ResumeTime'
+          ? `${key}=${encodeURIComponent(payload[key])}`
+          : `${key}=${payload[key]}`
+      )
       .sort()
       .join('&')
 
+    const strToSign = `${method.toUpperCase()}&${encodeURIComponent('/')}&${escape(paramsStr)
+      .replace('+', '%20')
+      .replace('*', '%2A')
+      .replace('%7E', '~')}`
+
     // sign
-    return createHmac('sha1', `${this.options.accessKeySecret}&`)
-      .update(
-        `${method.toUpperCase()}&${encodeURIComponent('/')}&${escape(paramsStr)
-          .replace('+', '%20')
-          .replace('*', '%2A')
-          .replace('%7E', '~')}`
-      )
-      .digest('base64')
+    return createHmac('sha1', `${this.options.accessKeySecret}&`).update(strToSign).digest('base64')
   }
 
   /**
