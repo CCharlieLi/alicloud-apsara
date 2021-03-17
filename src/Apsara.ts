@@ -243,6 +243,7 @@ export class Apsara {
     switch (format) {
       case ApsaraProtocals.flv:
         return `.${ApsaraProtocals.flv}`
+      case ApsaraProtocals.hls:
       case ApsaraProtocals.m3u8:
         return `.${ApsaraProtocals.m3u8}`
       case ApsaraProtocals.rtmp:

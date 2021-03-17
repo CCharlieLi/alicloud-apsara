@@ -117,6 +117,22 @@ describe('Unit test', () => {
       expect(url.pathname).toBe('/testApp/testStream.m3u8')
     })
 
+    it('should get streaming url successfully - hls', async () => {
+      const url: URL = await apsara.getVideoStreamingUrl({
+        domain: 'eko.com',
+        appName: 'testApp',
+        streamName: 'testStream',
+        expiredIn: 3600,
+        key: 'testKey',
+        format: 'hls',
+        isSecure: true
+      })
+
+      expect(url.protocol).toBe('https:')
+      expect(url.host).toBe('eko.com')
+      expect(url.pathname).toBe('/testApp/testStream.m3u8')
+    })
+
     it('should get streaming url successfully - flv', async () => {
       const url: URL = await apsara.getVideoStreamingUrl({
         domain: 'eko.com',
